@@ -1,0 +1,99 @@
+{
+  "mode": "ai",
+  "project_title": "Retail Support Policy & Product Evidence Review RAG",
+  "short_description": "A beginner-friendly RAG application enabling retail support agents to quickly find answers and supporting evidence from internal policy documents, product manuals, and troubleshooting guides using natural language queries. Includes a FastAPI backend, React frontend, and source citations.",
+  "domain_summary": "Retail support often requires agents to quickly access and synthesize information from a large volume of internal documents (e.g., return policies, price match guidelines, product specifications, repair procedures). This project addresses the challenge of information retrieval by providing a RAG system that delivers precise answers with direct citations to the relevant source documents, improving agent efficiency and accuracy in real-time customer interactions.",
+  "user_persona": "{'name': 'Customer Support Agent (Beginner Level)', 'description': 'A new or junior customer support agent at a retail company, responsible for handling customer inquiries regarding product returns, warranty claims, troubleshooting, and general policy questions. Needs a quick, reliable way to find accurate information without extensive manual document searching.', 'pain_points': ['Difficulty finding specific information within vast document libraries.', 'Ensuring accuracy and consistency in answers.', 'Time pressure during customer calls/chats.', 'Need to cite sources for audit or verification.']}",
+  "architecture_notes": [
+    "{'overview': 'A full-stack application with a clear separation of concerns. The backend, built with FastAPI, handles document ingestion, RAG logic (embedding, vector search, LLM orchestration), and API endpoints. The frontend, built with React, provides a user-friendly interface for querying and displaying results with citations. All components are designed for simplicity suitable for a beginner project.', 'data_flow': 'User query -> React Frontend -> FastAPI Backend -> Embed Query -> Vector Store Search (for relevant document chunks) -> LLM (with query and chunks as context) -> LLM Response (answer + source references) -> FastAPI Backend -> React Frontend (display answer + citations).'}"
+  ],
+  "backend_modules": [
+    "{'name': 'FastAPI Main Application', 'description': 'Entry point for the backend, defines API routes for health checks, document ingestion, and RAG queries.', 'technologies': ['FastAPI', 'Uvicorn']}",
+    "{'name': 'RAG Service', 'description': 'Core logic for the RAG pipeline. Includes text chunking, embedding generation, vector store interaction, and LLM query orchestration.', 'technologies': ['sentence-transformers', 'Faiss-CPU', 'Python `transformers` (for local LLM interaction or placeholder)', 'LangChain/LlamaIndex (simplified integration)']}",
+    "{'name': 'Document Ingestion & Management', 'description': 'Handles loading text files from a local directory, chunking them into manageable segments, and populating the vector store. This module will run once on startup or via a specific endpoint.', 'technologies': ['Python file I/O', 'Text Splitters (e.g., `recursive_character_text_splitter`)']}",
+    "{'name': 'Testing Module', 'description': 'Unit and integration tests for backend components, including RAG logic and API endpoint responses.', 'technologies': ['pytest']}"
+  ],
+  "frontend_features": [
+    "{'name': 'Search Query Input', 'description': 'A text input field for users to type their natural language questions.', 'technologies': ['React', 'HTML input']}",
+    "{'name': 'Search Button', 'description': 'Triggers the API call to the backend RAG service.', 'technologies': ['React', 'HTML button']}",
+    "{'name': 'Answer Display Area', 'description': 'Shows the LLM-generated answer clearly and concisely.', 'technologies': ['React', 'HTML div']}",
+    "{'name': 'Source Citations Panel', 'description': 'Lists the document filenames from which the answer was derived, allowing agents to verify information or dig deeper.', 'technologies': ['React', 'HTML ul/li']}",
+    "{'name': 'Loading Indicator', 'description': 'Visual feedback while the backend processes the query.', 'technologies': ['React', 'CSS']}"
+  ],
+  "data_sources": [
+    "{'name': 'Local Retail Documents Directory', 'description': 'A local folder containing plain text files representing retail policies, product manuals, FAQs, and troubleshooting guides. This is the primary data source for the RAG system.', 'type': 'Local filesystem', 'format': 'TXT'}"
+  ],
+  "testing_strategy": [
+    "{'backend_tests': ['Unit tests for RAG components: text chunking, embedding generation, vector search (mocking LLM calls).', 'Integration tests for FastAPI endpoints: ensuring API calls return expected status codes and data structures.', 'Mock LLM responses for RAG integration tests to verify context passing and response parsing.'], 'frontend_tests': ['Component tests for React elements (input, button, display areas).', 'Basic end-to-end tests (simulating user input and verifying UI updates) using a testing library like React Testing Library.'], 'overall_strategy': 'Prioritize clarity and directness. Focus on testing the core RAG loop and API interactions. Use pytest for backend and a simple React testing setup for frontend.'}"
+  ],
+  "starter_questions": [
+    "What is our return policy for electronic items purchased online?",
+    "How do I process a price match request for a competitor's advertised price?",
+    "What are the steps to troubleshoot a customer's smart TV not connecting to Wi-Fi?",
+    "Can a customer return an item without a receipt?",
+    "What is the warranty period for store-brand kitchen appliances?"
+  ],
+  "workflow_steps": [
+    "**Setup**: Clone repository, install backend dependencies (`pip install -r requirements.txt`), install frontend dependencies (`npm install`).",
+    "**Document Ingestion**: Place relevant `.txt` files in the `/docs` directory. Run the FastAPI backend, which will automatically load and index these documents into the vector store upon startup or a dedicated endpoint.",
+    "**Backend Start**: Navigate to the backend directory and run `uvicorn main:app --reload`.",
+    "**Frontend Start**: Navigate to the frontend directory and run `npm start`.",
+    "**Query**: Open the frontend URL in a browser (e.g., `http://localhost:3000`). Type a question related to retail policies or products into the search box.",
+    "**Review**: Submit the query. The application will display a concise answer and a list of source document filenames.",
+    "**Iterate**: Refine queries or add more documents to the `/docs` folder and restart the backend to update the index."
+  ],
+  "business_rules": [
+    "All RAG responses must include at least one source citation (filename).",
+    "Answers should be concise and directly address the user's question.",
+    "The system should prioritize facts from official company documents over general knowledge.",
+    "Max 3 relevant document chunks are used as context for the LLM to avoid token limits and focus on precision for beginner level.",
+    "Responses must avoid speculative or out-of-scope information."
+  ],
+  "sample_documents": [
+    {
+      "filename": "Product_Return_Policy_V2.txt",
+      "content": "Our standard return policy allows customers to return most items within 30 days of purchase with a valid receipt for a full refund or exchange. For defective electronics, the return window extends to 90 days. Opened software, digital downloads, and personalized items are non-returnable. Manager discretion may apply for returns without a receipt, typically resulting in store credit at the current selling price."
+    },
+    {
+      "filename": "Price_Match_Policy_Guide_2023.txt",
+      "content": "We offer price matching for identical items found cheaper at local competitor stores. The competitor's advertisement must be current and verifiable (e.g., print ad, active website link). Price match requests must be made at the time of purchase or within 7 days. Exclusions include clearance items, doorbusters, and online-only retailers. Manager approval is required for any price match exceeding a 15% discount."
+    },
+    {
+      "filename": "Cashier_Training_Section_4_Returns.txt",
+      "content": "When processing a return, always scan the original receipt first. Verify the item matches the receipt description. If the item is defective, document the defect code (e.g., D101-Cracked Screen, D102-Power Issue). For non-receipt returns, use the 'Lookup Transaction' function if the customer has a loyalty account, otherwise offer store credit. Ensure the customer fills out the return log if the item value is over $50."
+    },
+    {
+      "filename": "Smart_TV_Troubleshooting_Guide_X_Series.txt",
+      "content": "If a customer reports their X-Series Smart TV has no picture, first check all HDMI and power cable connections. Ensure the TV's input source matches the connected device. Next, try a soft power cycle: unplug for 60 seconds then replug. If issues persist, guide the customer to perform a factory reset via 'Settings > System > Advanced Options > Factory Reset'. This will erase user data."
+    }
+  ],
+  "tool_catalog": [
+    {
+      "name": "FastAPI",
+      "description": "High-performance web framework for building APIs with Python, known for its speed and automatic interactive API documentation."
+    },
+    {
+      "name": "React",
+      "description": "A JavaScript library for building user interfaces, ideal for single-page applications and interactive UIs."
+    },
+    {
+      "name": "sentence-transformers",
+      "description": "Python library for state-of-the-art sentence, paragraph, and image embeddings, used here for converting text chunks into numerical vectors."
+    },
+    {
+      "name": "Faiss-CPU",
+      "description": "A library for efficient similarity search and clustering of dense vectors, used for storing and quickly retrieving document chunks based on semantic similarity."
+    },
+    {
+      "name": "Python `transformers` library (conceptual)",
+      "description": "Hugging Face library for integrating with pre-trained language models. For a beginner project, a simple local model or a conceptual placeholder for LLM interaction will be used."
+    },
+    {
+      "name": "pytest",
+      "description": "A popular and highly flexible testing framework for Python, used for writing simple and scalable tests for the backend."
+    }
+  ],
+  "model_provider": "gemini",
+  "model_name": "gemini-2.5-flash",
+  "fallback_reason": "OpenAI limit reached. Automatically switched to Gemini."
+}
